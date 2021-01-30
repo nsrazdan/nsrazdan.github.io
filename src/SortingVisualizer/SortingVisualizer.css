@@ -2,8 +2,9 @@
   display: flex;
   flex-direction: row;
   height: 80%;
+  justify-content: center;  
   margin: 10px;
-  justify-content: center;
+
 }
 
 .array-bar {
