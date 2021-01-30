@@ -3,6 +3,7 @@
   flex-direction: row;
   height: 80%;
   margin: 10px;
+  justify-content: center;
 }
 
 .array-bar {
