@@ -23,7 +23,7 @@ export default class SortingVisualizer extends React.Component {
       length: 150,
       maxVal: 100,
       minVal: 10,
-      timeout: 100,
+      timeout: 5,
       inactiveColor: "blue",
       compareColor: "red",
       sortedColor: "purple"
@@ -36,7 +36,7 @@ export default class SortingVisualizer extends React.Component {
 
     // Create div for each value in array
     for (let i = 0; i < this.state.length; i++) {
-      let style = {backgroundColor: this.state.inactiveColor, height: this.state.array[i] + 'px'}
+      let style = {backgroundColor: this.state.inactiveColor, height: this.state.array[i] + 'px', width: "2px"};
       arrayDisplay.push(
         <div className="array-bar" key={i} id={i} style={style}> </div>);
     }
@@ -130,20 +130,55 @@ export default class SortingVisualizer extends React.Component {
     console.log(this.props);
     let anim = this.state.animations;
     let arrayBars = document.getElementsByClassName("array-bar");
+    let prevAnim = {type: "undefined", indices: []};
 
     for (let t = 0; t < anim.length; t++) {
+      // eslint-disable-next-line
       setTimeout(() => {
-        if (anim[t].type === "compare") {
-          for (let index of anim[t].indices) {
-            arrayBars[index].style.backgroundColor = this.state.compareColor;
-            console.log(arrayBars[index]);
+        // reset arrayBars of previous compare back to inactiveColor
+        if (prevAnim.type === "compare") {
+          for (let index of prevAnim.indices) {
+            arrayBars[index].style.backgroundColor = this.state.inactiveColor;
           }
-        } else if (anim.type === "sorted") {
+        }
 
-        } else if (anim.type === "swap") {
-
+        // animate depending on animation type
+        switch(anim[t].type) {
+          // color arrayBars of compare indices to compareColor
+          case "compare":
+            for (let index of anim[t].indices) {
+              arrayBars[index].style.backgroundColor = this.state.compareColor;
+            }
+            prevAnim = anim[t];
+            break;
+          case "sorted":
+            for (let index of anim[t].indices) {
+              arrayBars[index].style.backgroundColor = this.state.sortedColor;
+            }
+            break;
+          case "swap":
+            this.swapStateArrayElements(anim[t].indices[0], anim[t].indices[1]);
+            break;
+          default:
+            throw Error("Invalid animation type");
         }
       }, t * this.state.timeout);
     }
+
+    // reset animations
+    this.setState((prevState) =>({
+      animations: []
+    }));
+  }
+
+  swapStateArrayElements(idx1, idx2) {
+    let tempArray = this.state.array.slice();
+    let temp = tempArray[idx1];
+    tempArray[idx1] = tempArray[idx2];
+    tempArray[idx2] = temp;
+    this.setState((prevState) => ({
+      array: tempArray
+    }));
+
   }
 }
