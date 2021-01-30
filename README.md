@@ -1,70 +1,35 @@
-# Getting Started with Create React App
+# Project Description
+- Visualize how sorting algorithms work with colored vertical bars
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Color Meanings
+- When a bar is blue, it is inactive. This means that bar is unsorted and is currently not being compared.
+- When a bar is red, that means that it is being compared with the other red bar.
+- When a bar is purple, that means that it is in its final sorted position.
 
-## Available Scripts
+# Code Hierarchy
+- All of the code related to the calculation and display is in ./src/SortingVisualizer
+- All of the front end is contained in the React component `SortingVisualizer`
+- All of the sorting algorithms are implemented and member functions of `SortingVisualizer`
+- The animations are implemented as a member function of `SortingVisualizer` that gets called once a sorting algorithm has completed
 
-In the project directory, you can run:
+## Sorting Algorithms
+- Each sorting algorithm is its own member function of `SortingVisualizer`
+- A copy is made of the underlying state array `array` called `tempArray`
+- During the sorting algorithm, all computation and editing is done on `tempArray`, not on `array`
+- This is because `setState`, which would be needed to edit `array`, is asyncronous, and does not guarantee completion before the next line of code.
+- You can read more about this here: https://ozmoroz.com/2018/11/why-my-setstate-doesnt-work/
+- On every comparison, swap, or final sorted position, an object for animation gets pushed to the `animation` array
+- For more information about how the animations work, look [here](#animations)
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Animations
+- Animations are stored in an array in the state of `SortingVisualizer` called `animations`
+- This array gets populated during a given sort with a sequence of objects
+- These objects are in the form `{type: <type of animation>, indices: <indices of arrayBars that the animation applies to>}`
+- The types are as follows:
+  - "compare", with the indices of bars being compared
+  - "swap", with the indices of bars to be swapped
+  - "sorted", with the indices of bars that are in their final sorted position
+- The animations get displayed after the sorting terminated, by using `SetTimeout()` to show the animations synchronously
+- The state variable `array`, which contains the underlying array that gets sorted, is edited during the swap animation
+- This is because the bars get their height directly from `array`
+- This means that the timeout has to be long enough for `setState()` to be guaranteed to be completed before the next call. Otherwise, the state may not be changed before the next swap
