@@ -19,11 +19,14 @@ export default class SortingVisualizer extends React.Component {
 
     this.state = {
       array: [],
-      length: 5,
+      animations: [],
+      length: 150,
       maxVal: 100,
       minVal: 10,
       timeout: 100,
-      animations: []
+      inactiveColor: "blue",
+      compareColor: "red",
+      sortedColor: "purple"
     };
   }
 
@@ -33,9 +36,9 @@ export default class SortingVisualizer extends React.Component {
 
     // Create div for each value in array
     for (let i = 0; i < this.state.length; i++) {
-      let style = {backgroundColor: 'lightblue', height: this.state.array[i] + 'px'}
+      let style = {backgroundColor: this.state.inactiveColor, height: this.state.array[i] + 'px'}
       arrayDisplay.push(
-        <div className="array-bar" key={i} style={style}> </div>);
+        <div className="array-bar" key={i} id={i} style={style}> </div>);
     }
 
     return (
@@ -124,11 +127,23 @@ export default class SortingVisualizer extends React.Component {
 
   /* Display animations */
   displayAnimations() {
+    console.log(this.props);
     let anim = this.state.animations;
-    for (let i = 0; i < anim.length; i++) {
+    let arrayBars = document.getElementsByClassName("array-bar");
+
+    for (let t = 0; t < anim.length; t++) {
       setTimeout(() => {
-        console.log(anim[i]);
-      }, i * this.state.timeout);
+        if (anim[t].type === "compare") {
+          for (let index of anim[t].indices) {
+            arrayBars[index].style.backgroundColor = this.state.compareColor;
+            console.log(arrayBars[index]);
+          }
+        } else if (anim.type === "sorted") {
+
+        } else if (anim.type === "swap") {
+
+        }
+      }, t * this.state.timeout);
     }
   }
 }
