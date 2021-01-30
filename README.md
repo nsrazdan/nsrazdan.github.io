@@ -17,7 +17,7 @@
 - A copy is made of the underlying state array `array` called `tempArray`
 - During the sorting algorithm, all computation and editing is done on `tempArray`, not on `array`
 - This is because `setState`, which would be needed to edit `array`, is asyncronous, and does not guarantee completion before the next line of code.
-- You can read more about this here: https://ozmoroz.com/2018/11/why-my-setstate-doesnt-work/
+- You can read more about this [here](https://ozmoroz.com/2018/11/why-my-setstate-doesnt-work/)
 - On every comparison, swap, or final sorted position, an object for animation gets pushed to the `animation` array
 - For more information about how the animations work, look [here](#animations)
 
