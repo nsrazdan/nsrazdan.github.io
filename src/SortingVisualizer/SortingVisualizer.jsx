@@ -22,6 +22,7 @@ export default class SortingVisualizer extends React.Component {
       length: 5,
       maxVal: 100,
       minVal: 10,
+      timeout: 100,
       animations: []
     };
   }
@@ -87,22 +88,24 @@ export default class SortingVisualizer extends React.Component {
   }
 
   selectionSort() {
-    console.log("Selection Sort Started");
-    console.log(this.state.array);
+    console.log("Selection Sort Started with array:", this.state.array);
+
+    let tempArray = this.state.array.slice();
 
     for (let i = 0; i < this.state.length; i++) {
-      let min = {index: i, val: this.state.array[i]};
+      let min = {index: i, value: tempArray[i]};
 
       // find minimum element of unsorted sub-array
       for (let j = i; j < this.state.length; j++) {
-        let cur = {index: j, val: this.state.array[j]}
+        let cur = {index: j, value: tempArray[j]}
 
         // push animation of comparing min element with cur element
         this.state.animations.push({type: "compare", indices: [min.index, cur.index]});
 
-        if (cur.val < min.val) {
+        // if cur element is smaller than min, make new min element
+        if (cur.value < min.value) {
           min.index = cur.index;
-          min.value = cur.val;
+          min.value = cur.value;
         }
       }
 
@@ -111,22 +114,21 @@ export default class SortingVisualizer extends React.Component {
       this.state.animations.push({type: "sorted", indices: [i]});
 
       // swap minumum element of unsorted sub-array with first element of unsorted sub-array
-      let tempArray = this.state.array.slice();
       tempArray[min.index] = tempArray[i];
-      tempArray[i] = min.val;
-      this.setState((prevState) => ({
-        array: tempArray
-      }));
-
-      console.log("temp:", tempArray);
-      console.log("state:", this.state.array);
+      tempArray[i] = min.value;
     }
 
-    console.log(this.state.animations);
+    console.log("Sorted Array", tempArray);
+    this.displayAnimations();
   }
 
-  /* Display animation */
+  /* Display animations */
   displayAnimations() {
-
+    let anim = this.state.animations;
+    for (let i = 0; i < anim.length; i++) {
+      setTimeout(() => {
+        console.log(anim[i]);
+      }, i * this.state.timeout);
+    }
   }
 }
