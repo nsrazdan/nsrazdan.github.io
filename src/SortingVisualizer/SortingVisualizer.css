@@ -1,0 +1,13 @@
+.array-container{
+  display: flex;
+  flex-direction: row;
+  height: 80%;
+  margin: 10px;
+}
+
+.array-bar {
+  background-color: lightblue;
+  display: inline-block;
+  margin: 0 1px;
+  width: 2px;
+}
