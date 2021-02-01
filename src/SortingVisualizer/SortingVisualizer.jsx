@@ -22,7 +22,7 @@ export default class SortingVisualizer extends React.Component {
       animations: [],
       length: 150,
       maxVal: 100,
-      minVal: 10,
+      minVal: 5,
       timeout: 5,
       arrayContainerHeight: 0.8,
       arrayContainerWidth: 0.8,
@@ -34,13 +34,6 @@ export default class SortingVisualizer extends React.Component {
 
   // setup when component first gets mounted
   componentDidMount() {
-    // set maxVal to be percentage of screen height
-    let screenHeight = window.screen.availHeight;
-    this.setState((prevState) => ({
-      maxVal: screenHeight * this.state.arrayContainerHeight
-    }));
-
-    // generate new array
     this.genArray();
   }
 
@@ -48,10 +41,9 @@ export default class SortingVisualizer extends React.Component {
     // vars to calculate render
     const arrayBars = [];
     const screenWidth = window.screen.availWidth;
-    let arrayBarWidth = "2px";
 
     // calculate the width of bars
-    arrayBarWidth = Math.floor((screenWidth * this.state.arrayContainerWidth) / this.state.length);
+    let arrayBarWidth = Math.floor((screenWidth * this.state.arrayContainerWidth) / this.state.length) + "px";
 
     // Create div for each value in array
     for (let i = 0; i < this.state.length; i++) {
