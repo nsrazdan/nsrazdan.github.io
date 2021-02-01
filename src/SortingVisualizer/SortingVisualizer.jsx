@@ -32,24 +32,45 @@ export default class SortingVisualizer extends React.Component {
 
   render() {
     // vars to calculate render
-    const arrayDisplay = [];
+    const arrayBars = [];
 
     // Create div for each value in array
     for (let i = 0; i < this.state.length; i++) {
       let style = {backgroundColor: this.state.inactiveColor, height: this.state.array[i] + 'px', width: "2px"};
-      arrayDisplay.push(
-        <div className="array-bar" key={i} id={i} style={style}> </div>);
+      arrayBars.push(
+        <div className="array-bar" key={i} style={style}> </div>);
     }
 
     return (
       <div className="page">
         <button onClick={() => this.resetArray()}> Generate New Array </button>
-        <button onClick={() => this.bubbleSort()}> Bubble Sort </button>
-        <button onClick={() => this.heapSort()}> Heap Sort </button>
-        <button onClick={() => this.mergeSort()}> Merge Sort </button>
-        <button onClick={() => this.quickSort()}> Quick Sort </button>
-        <button onClick={() => this.selectionSort()}> Selection Sort </button>
-        <div className="array-container"> {arrayDisplay} </div>
+
+        <button onClick={() => {
+          this.bubbleSort();
+          this.displayAnimations();
+        }}> Bubble Sort </button>
+
+        <button onClick={() => {
+          this.heapSort();
+          this.displayAnimations();
+        }}> Heap Sort </button>
+
+        <button onClick={() => {
+          this.mergeSort();
+          this.displayAnimations();
+        }}> Merge Sort </button>
+
+        <button onClick={() => {
+          this.quickSort();
+          this.displayAnimations();
+        }}> Quick Sort </button>
+
+        <button onClick={() => {
+          this.selectionSort();
+          this.displayAnimations();
+        }}> Selection Sort </button>
+
+        <div className="array-container"> {arrayBars} </div>
       </div>
     );
   }
@@ -61,12 +82,20 @@ export default class SortingVisualizer extends React.Component {
   /* functions to create new random array of given length */
   resetArray() {
     const tempArray = [];
+    let arrayBars = document.getElementsByClassName("array-bar");
+
+    // set array elements to new random numbers
     for(let i = 0; i < this.state.length; i++) {
       tempArray.push(this.getRandomInt(this.state.minVal, this.state.maxVal));
     }
     this.setState((prevState) => ({
       array: tempArray
     }));
+
+    // set arrayBars colors to inactiveColor
+    for (let i = 0; i < this.state.length; i++) {
+      arrayBars[i].style.backgroundColor = this.state.inactiveColor;
+    }
   }
 
   getRandomInt(min, max) {
@@ -122,12 +151,10 @@ export default class SortingVisualizer extends React.Component {
     }
 
     console.log("Sorted Array", tempArray);
-    this.displayAnimations();
   }
 
   /* Display animations */
   displayAnimations() {
-    console.log(this.props);
     let anim = this.state.animations;
     let arrayBars = document.getElementsByClassName("array-bar");
     let prevAnim = {type: "undefined", indices: []};
