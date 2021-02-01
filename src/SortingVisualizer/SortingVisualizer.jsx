@@ -24,26 +24,45 @@ export default class SortingVisualizer extends React.Component {
       maxVal: 100,
       minVal: 10,
       timeout: 5,
+      arrayContainerHeight: 0.8,
+      arrayContainerWidth: 0.8,
       inactiveColor: "blue",
       compareColor: "red",
       sortedColor: "purple"
     };
   }
 
+  // setup when component first gets mounted
+  componentDidMount() {
+    // set maxVal to be percentage of screen height
+    let screenHeight = window.screen.availHeight;
+    this.setState((prevState) => ({
+      maxVal: screenHeight * this.state.arrayContainerHeight
+    }));
+
+    // generate new array
+    this.genArray();
+  }
+
   render() {
     // vars to calculate render
     const arrayBars = [];
+    const screenWidth = window.screen.availWidth;
+    let arrayBarWidth = "2px";
+
+    // calculate the width of bars
+    arrayBarWidth = Math.floor((screenWidth * this.state.arrayContainerWidth) / this.state.length);
 
     // Create div for each value in array
     for (let i = 0; i < this.state.length; i++) {
-      let style = {backgroundColor: this.state.inactiveColor, height: this.state.array[i] + 'px', width: "2px"};
+      let style = {backgroundColor: this.state.inactiveColor, height: this.state.array[i] + 'px', width: arrayBarWidth};
       arrayBars.push(
         <div className="array-bar" key={i} style={style}> </div>);
     }
 
     return (
       <div className="page">
-        <button onClick={() => this.resetArray()}> Generate New Array </button>
+        <button onClick={() => this.genArray()}> Generate New Array </button>
 
         <button onClick={() => {
           this.bubbleSort();
@@ -75,12 +94,8 @@ export default class SortingVisualizer extends React.Component {
     );
   }
 
-  componentDidMount() {
-    this.resetArray();
-  }
-
   /* functions to create new random array of given length */
-  resetArray() {
+  genArray() {
     const tempArray = [];
     let arrayBars = document.getElementsByClassName("array-bar");
 
