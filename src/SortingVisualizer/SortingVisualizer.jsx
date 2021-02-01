@@ -21,10 +21,10 @@ export default class SortingVisualizer extends React.Component {
       array: [],
       animations: [],
       length: 150,
-      maxVal: 100,
-      minVal: 5,
+      maxVal: 1000,
+      minVal: 50,
       timeout: 5,
-      arrayContainerHeight: 0.8,
+      arrayContainerHeight: 0.6,
       arrayContainerWidth: 0.8,
       inactiveColor: "blue",
       compareColor: "red",
@@ -41,13 +41,15 @@ export default class SortingVisualizer extends React.Component {
     // vars to calculate render
     const arrayBars = [];
     const screenWidth = window.screen.availWidth;
+    const screenHeight = window.screen.availHeight;
 
     // calculate the width of bars
     let arrayBarWidth = Math.floor((screenWidth * this.state.arrayContainerWidth) / this.state.length) + "px";
 
     // Create div for each value in array
     for (let i = 0; i < this.state.length; i++) {
-      let style = {backgroundColor: this.state.inactiveColor, height: this.state.array[i] + 'px', width: arrayBarWidth};
+      let arrayBarHeight = Math.floor((this.state.array[i] / this.state.maxVal) * (this.state.arrayContainerHeight * screenHeight)) + "px";
+      let style = {backgroundColor: this.state.inactiveColor, height: arrayBarHeight, width: arrayBarWidth};
       arrayBars.push(
         <div className="array-bar" key={i} style={style}> </div>);
     }
